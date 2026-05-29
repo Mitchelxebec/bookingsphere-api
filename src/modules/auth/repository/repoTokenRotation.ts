@@ -1,6 +1,7 @@
 import { eq, lte } from "drizzle-orm";
 import { db } from "../../../infrastructure/db/connection.js";
 import { refreshTokens } from "../../../infrastructure/db/schema/refreshTokens.js";
+import { users } from "../../../infrastructure/db/schema/users.js";
 
 export const TokenRotationRepository = {
   // Save newly generated token
@@ -20,6 +21,17 @@ export const TokenRotationRepository = {
       .where(eq(refreshTokens.token, token))
       .limit(1);
     return record ?? null;
+  },
+
+  // Fetch user
+  async fetchUser(userId: string) {
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
+
+    return user ?? null;
   },
 
   //   Mark refresh token as used

@@ -26,21 +26,11 @@ export const rotateTokens = async (incomingRefreshToken: string) => {
     throw new ApiError(401, "Invalid or expired refresh token signature");
   }
 
-  //  Fetch token status from db
   const tokenRecord =
     await TokenRotationRepository.findToken(incomingRefreshToken);
   if (!tokenRecord) {
     throw new ApiError(401, "Refresh token does not exisst");
   }
-
-  // Fetch users current role
-  const [userProfile] = await db
-    .select({ roles: users.roles })
-    .from(users)
-    .where(eq(users.id, tokenRecord.userId))
-    .limit(1);
-
-  const currentRole = userProfile?.roles || ["GUEST"];
 
   // If token is marked as used delete
   if (tokenRecord.isUsed) {
@@ -51,8 +41,15 @@ export const rotateTokens = async (incomingRefreshToken: string) => {
     );
   }
 
+  // Check if the users account has been deleted and Fetch users current role
+  const userProfile = await TokenRotationRepository.fetchUser(tokenRecord.userId);
+  if (!userProfile) throw new ApiError(404, "User does not exist");
+  if (userProfile?.deleted_at) throw new ApiError(404, "User does not exist");
+
   //   Mark token as used
   await TokenRotationRepository.markAsUsed(tokenRecord.id);
+
+  const currentRole = userProfile?.roles || ["GUEST"];
 
   //   Generate new refresh and access token
   const newTokens = TokenService.generateTokenPair({
