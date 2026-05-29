@@ -1,5 +1,5 @@
-import { v2 as cloudinary } from "cloudinary";
 import { Readable } from "stream";
+import cloudinary from "./cloudinary.js"
 
 export const uploadToCloudinary = (
   buffer: Buffer,
