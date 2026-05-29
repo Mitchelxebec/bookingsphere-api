@@ -1,5 +1,15 @@
 import { v2 as cloudinary } from "cloudinary";
 
+if (
+  !process.env.CLOUDINARY_CLOUD_NAME ||
+  !process.env.CLOUDINARY_API_KEY ||
+  !process.env.CLOUDINARY_API_SECRET
+) {
+  throw new Error(
+    "CRITICAL: Cloudinary environment variables are missing! Check your configuration flow.",
+  );
+}
+
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME as string,
   api_key: process.env.CLOUDINARY_API_KEY as string,

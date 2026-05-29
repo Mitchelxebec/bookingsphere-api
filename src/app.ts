@@ -1,6 +1,6 @@
+import dotenv from "dotenv";
 import express, { type Request, type Response } from "express";
 import rateLimit from "express-rate-limit";
-import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import authRoute from "./modules/auth/routes/authRoute.js";
 import userRoute from "./modules/user/routes/userRoute.js";
