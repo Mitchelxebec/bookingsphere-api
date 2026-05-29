@@ -1,8 +1,7 @@
 import { Router } from "express";
 import { signupController } from "../controller/registerController.js";
 import { loginController } from "../controller/loginController.js";
-import { userToken } from "../middleware/tokenMiddleware.js";
-import { getMeController } from "../controller/getMe.js";
+import { userToken } from "../../../infrastructure/middleware/tokenMiddleware.js";
 import { requireRoles } from "../middleware/roleGuard.js";
 import { getAdminDashboard } from "../controller/adminController.js";
 import { validateBody } from "../middleware/validateBody.js";
@@ -15,7 +14,6 @@ const router = Router();
 
 router.post("/register", validateBody(registerSchema), signupController);
 router.post("/login", validateBody(loginSchema), loginController);
-router.get("/me", userToken, getMeController);
 
 // REGENERATE NEW REFRESH TOKEN
 router.post("/refresh-token", checkCookieController);

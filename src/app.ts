@@ -3,13 +3,14 @@ import rateLimit from "express-rate-limit";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import authRoute from "./modules/auth/routes/authRoute.js";
+import userRoute from "./modules/user/routes/userRoute.js";
 import { errorHandler } from "./infrastructure/utils/errorMiddleware.js";
 
 dotenv.config();
 
 const app = express();
 
-app.set("trust proxy", 1)
+app.set("trust proxy", 1);
 
 // Global Middleware Configuration
 app.use(express.json());
@@ -23,6 +24,7 @@ const limiter = rateLimit({
 // ROUTES
 app.use("/api/", limiter);
 app.use("/api/v1/auth", authRoute);
+app.use("api/v1/user", userRoute);
 
 app.get("/", (req: Request, res: Response) => {
   res.status(200).json({

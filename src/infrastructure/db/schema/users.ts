@@ -17,4 +17,5 @@ export const users = pgTable("users", {
   avatar_url: text("avatar_url"),
   phone: varchar("phone", { length: 20 }),
   created_at: timestamp("created_at").defaultNow().notNull(),
+  deleted_at: timestamp("deleted_at")
 });
