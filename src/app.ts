@@ -24,7 +24,7 @@ const limiter = rateLimit({
 // ROUTES
 app.use("/api/", limiter);
 app.use("/api/v1/auth", authRoute);
-app.use("api/v1/user", userRoute);
+app.use("/api/v1/users", userRoute);
 
 app.get("/", (req: Request, res: Response) => {
   res.status(200).json({
