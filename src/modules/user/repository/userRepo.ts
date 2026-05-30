@@ -18,6 +18,12 @@ export const findUserById = async (userId: string) => {
   return user ?? null;
 };
 
+export const findUserByEmail = async (email: string) => {
+  const [user] = await db.select().from(users).where(eq(users.email, email));
+
+  return user ?? null;
+};
+
 export const updateAvatar = async (userId: string, avatarUrl: string) => {
   const user = await db
     .update(users)

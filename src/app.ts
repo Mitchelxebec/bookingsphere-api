@@ -2,6 +2,8 @@ import dotenv from "dotenv";
 import express, { type Request, type Response } from "express";
 import rateLimit from "express-rate-limit";
 import cookieParser from "cookie-parser";
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "./infrastructure/docs/swagger.js";
 import authRoute from "./modules/auth/routes/authRoute.js";
 import userRoute from "./modules/user/routes/userRoute.js";
 import { errorHandler } from "./infrastructure/utils/errorMiddleware.js";
@@ -22,6 +24,7 @@ const limiter = rateLimit({
 });
 
 // ROUTES
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/", limiter);
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/users", userRoute);

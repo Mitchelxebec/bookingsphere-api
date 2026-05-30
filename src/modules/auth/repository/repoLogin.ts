@@ -18,3 +18,16 @@ export const findUserFromEmail = async (email: string) => {
 
   return user ?? null;
 };
+
+export const updatePasswordByEmail = async (
+  email: string,
+  hashedNewPassword: string,
+): Promise<boolean> => {
+  const result = await db
+    .update(users)
+    .set({ password_hash: hashedNewPassword })
+    .where(eq(users.email, email))
+    .returning({ id: users.id });
+
+  return result.length > 0;
+};

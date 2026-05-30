@@ -19,3 +19,15 @@ export const isTokenBlacklisted = async (token: string): Promise<boolean> => {
   const result = await redis.exists(key);
   return result === 1; //REDIS RETURNS 1 IF THE KEY EXISTS, 0 IF IT DOESN'T
 };
+
+export const saveOtp = async (email: string, hashedOtp: string) => {
+  await redis.set(`otp:${email}`, hashedOtp, "EX", 600);
+};
+
+export const getOtp = async (email: string) => {
+  return await redis.get(`otp:${email}`);
+};
+
+export const deleteOtp = async (email: string) => {
+  await redis.del(`otp:${email}`);
+};
