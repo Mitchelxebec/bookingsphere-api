@@ -1,4 +1,13 @@
-import { pgEnum, pgTable, text, uuid, varchar } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  pgEnum,
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+  varchar,
+} from "drizzle-orm/pg-core";
+import { users } from "./users.js";
 
 export const propertyTypeEnum = pgEnum("property_type", [
   "HOTEL",
@@ -16,4 +25,10 @@ export const properties = pgTable("properties", {
   country: varchar("country", { length: 100 }).notNull(),
   imageUrl: text("image_url"),
   description: text("description"),
+  ownerId: uuid("owner_id")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+  isApproved: boolean("is_approved").default(false).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
