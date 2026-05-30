@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import { ApiError } from "../../../infrastructure/utils/ApiError.js";
+import { ApiError } from "../../shared/utils/ApiError.js";
 import { register } from "../service/registerService.js";
 
 export const signupController = async (

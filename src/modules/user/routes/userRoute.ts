@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { userToken } from "../../../infrastructure/middleware/tokenMiddleware.js";
+import { userToken } from "../../shared/middleware/tokenMiddleware.js";
 import upload from "../../../infrastructure/storage/multer.js";
 import { uploadController } from "../controller/uploadImgController.js";
 import { myAccountController } from "../controller/myAccount.js";

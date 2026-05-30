@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { ApiError } from "../../../infrastructure/utils/ApiError.js";
+import { ApiError } from "../../shared/utils/ApiError.js";
 import { TokenRotationRepository } from "../repository/repoTokenRotation.js";
 import { TokenService } from "../utils/tokenService.js";
 import { db } from "../../../infrastructure/db/connection.js";

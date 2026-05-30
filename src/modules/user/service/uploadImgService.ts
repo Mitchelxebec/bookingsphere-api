@@ -1,5 +1,5 @@
 import { uploadToCloudinary } from "../../../infrastructure/storage/uploadToCloudinary.js";
-import { ApiError } from "../../../infrastructure/utils/ApiError.js";
+import { ApiError } from "../../shared/utils/ApiError.js";
 import { findUserById, updateAvatar } from "../repository/userRepo.js";
 
 export const uploadService = async (userId: string, buffer: Buffer) => {

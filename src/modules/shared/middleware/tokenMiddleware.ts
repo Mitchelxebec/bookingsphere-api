@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { ApiError } from "../utils/ApiError.js";
-import { isTokenBlacklisted } from "../cache/redis.js";
+import { ApiError } from "../../../infrastructure/utils/ApiError.js";
+import { isTokenBlacklisted } from "../../../infrastructure/cache/redis.js";
 
 interface UserPayload {
   userId: string;

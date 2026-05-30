@@ -3,10 +3,10 @@ import express, { type Request, type Response } from "express";
 import rateLimit from "express-rate-limit";
 import cookieParser from "cookie-parser";
 import swaggerUi from "swagger-ui-express";
-import { swaggerSpec } from "./infrastructure/docs/swagger.js";
+import { swaggerSpec } from "./modules/shared/docs/swagger.js";
 import authRoute from "./modules/auth/routes/authRoute.js";
 import userRoute from "./modules/user/routes/userRoute.js";
-import { errorHandler } from "./infrastructure/utils/errorMiddleware.js";
+import { errorHandler } from "./modules/shared/utils/errorMiddleware.js";
 
 dotenv.config();
 

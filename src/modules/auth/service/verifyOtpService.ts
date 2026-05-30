@@ -5,7 +5,7 @@ import {
   getOtp,
   redis,
 } from "../../../infrastructure/cache/redis.js";
-import { ApiError } from "../../../infrastructure/utils/ApiError.js";
+import { ApiError } from "../../shared/utils/ApiError.js";
 
 export const verifyOtp = async (
   email: string,

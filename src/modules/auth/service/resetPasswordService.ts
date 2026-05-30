@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import { redis } from "../../../infrastructure/cache/redis.js";
-import { ApiError } from "../../../infrastructure/utils/ApiError.js";
+import { ApiError } from "../../shared/utils/ApiError.js";
 import { PasswordService } from "../utils/hash.js";
 import { updatePasswordByEmail } from "../repository/repoLogin.js";
 

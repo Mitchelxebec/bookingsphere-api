@@ -1,4 +1,4 @@
-import { ApiError } from "../../../infrastructure/utils/ApiError.js";
+import { ApiError } from "../../shared/utils/ApiError.js";
 import { findUserFromEmail } from "../repository/repoLogin.js";
 import { TokenRotationRepository } from "../repository/repoTokenRotation.js";
 import { PasswordService } from "../utils/hash.js";

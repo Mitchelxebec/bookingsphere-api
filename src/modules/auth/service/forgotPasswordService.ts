@@ -1,9 +1,9 @@
 import crypto from "crypto";
 import bcrypt from "bcrypt";
 import { findUserByEmail } from "../../user/repository/userRepo.js";
-import { ApiError } from "../../../infrastructure/utils/ApiError.js";
+import { ApiError } from "../../shared/utils/ApiError.js";
 import { redis, saveOtp } from "../../../infrastructure/cache/redis.js";
-import { sendOtpEmail } from "../../../infrastructure/utils/resend.js";
+import { sendOtpEmail } from "../../shared/utils/resend.js";
 
 export const forgotPassword = async (email: string) => {
   const user = await findUserByEmail(email);

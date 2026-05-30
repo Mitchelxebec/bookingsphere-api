@@ -3,7 +3,7 @@ import {
   findUserByEmail,
   type CreatedUserResult,
 } from "../repository/repoSignup.js";
-import { ApiError } from "../../../infrastructure/utils/ApiError.js";
+import { ApiError } from "../../shared/utils/ApiError.js";
 import { PasswordService } from "../utils/hash.js";
 import { TokenService } from "../utils/tokenService.js";
 import { TokenRotationRepository } from "../repository/repoTokenRotation.js";

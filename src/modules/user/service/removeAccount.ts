@@ -1,4 +1,4 @@
-import { ApiError } from "../../../infrastructure/utils/ApiError.js";
+import { ApiError } from "../../shared/utils/ApiError.js";
 import { deleteUserAccount, findUserById } from "../repository/userRepo.js";
 
 export const removeMyAccount = async (userId: string) => {
