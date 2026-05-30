@@ -14,9 +14,9 @@ export const resetPasswordController = async (
         "Missing required fields: reset token, and password",
       );
 
-    const { resetToken, newPassword } = req.body;
+    const { resetToken, password } = req.body;
 
-    const result = await resetPasswordService(resetToken, newPassword);
+    const result = await resetPasswordService(resetToken, password);
 
     res.status(200).json({
         success: true,
