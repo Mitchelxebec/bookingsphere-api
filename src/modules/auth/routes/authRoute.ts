@@ -2,7 +2,7 @@ import { Router } from "express";
 import { signupController } from "../controller/registerController.js";
 import { loginController } from "../controller/loginController.js";
 import { userToken } from "../../../../src/modules/shared/middleware/tokenMiddleware.js";
-import { requireRoles } from "../middleware/roleGuard.js";
+import { requireRoles } from "../../shared/middleware/roleGuard.js";
 import { getAdminDashboard } from "../controller/adminController.js";
 import { validateBody } from "../middleware/validateBody.js";
 import { loginSchema, registerSchema } from "../validators/authValidator.js";
