@@ -1,7 +1,7 @@
 import { db } from "../../../infrastructure/db/connection.js";
 import { users } from "../../../infrastructure/db/schema/users.js";
 import { eq } from "drizzle-orm";
-import { ApiError } from "../../../modules/shared/utils/ApiError.js";
+import { ApiError } from "../../shared/utils/ApiError.js";
 
 export const findUserByEmail = async (email: string) => {
   const [user] = await db
