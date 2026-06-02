@@ -9,7 +9,7 @@ export const forgotPassword = async (email: string) => {
   const user = await findUserByEmail(email);
   if (!user) throw new ApiError(404, "User not found. Please sign up");
 
-  const cooldownKey = `otp:cooldown${email}`;
+  const cooldownKey = `otp:cooldown:${email}`;
   const isCooldownActive = await redis.exists(cooldownKey);
   if (isCooldownActive)
     throw new ApiError(429, "Too many requests. Please wait for 60 seconds");

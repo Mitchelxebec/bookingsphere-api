@@ -17,7 +17,7 @@ const router = Router();
 
 /**
  * @openapi
- * /api/v1/auth/register:
+ * /auth/register:
  *   post:
  *     summary: Register a new user account
  *     tags: [Auth]
@@ -60,8 +60,8 @@ const router = Router();
  *         description: Conflict. Email address is already registered
  *       500:
  *         description: Internal server error
- * 
- * /api/v1/auth/forgot-password:
+ *
+ * /auth/forgot-password:
  *   post:
  *     summary: Request a password reset OTP
  *     tags: [Auth]
@@ -83,7 +83,7 @@ const router = Router();
  *       429:
  *         description: Rate limit hit. Please wait 60 seconds before retrying.
  *
- * /api/v1/auth/verify-otp:
+ * /auth/verify-otp:
  *   post:
  *     summary: Verify the 6-digit email OTP
  *     tags: [Auth]
@@ -111,7 +111,7 @@ const router = Router();
  *       400:
  *         description: Invalid or expired verification code.
  *
- * /api/v1/auth/reset-password:
+ * /auth/reset-password:
  *   post:
  *     summary: Execute account password update
  *     tags: [Auth]
@@ -122,17 +122,17 @@ const router = Router();
  *         application/json:
  *           schema:
  *             type: object
- *             required: [resetToken, newPassword]
+ *             required: [resetToken, password]
  *             properties:
  *               resetToken: { type: string, example: "6a8f3b2c..." }
- *               newPassword: { type: string, format: password, example: "BrandNewPassword99!" }
+ *               password: { type: string, format: password, example: "BrandNewPassword99!" }
  *     responses:
  *       200:
  *         description: Password updated successfully. Old sessions terminated.
  *       400:
  *         description: Reset token is invalid or has expired.
  *
- * /api/v1/auth/login:
+ * /auth/login:
  *   post:
  *     summary: Authenticate user credentials
  *     tags: [Auth]
@@ -177,7 +177,7 @@ const router = Router();
  *       500:
  *         description: Internal server error
  *
- * /api/v1/auth/refresh-token:
+ * /auth/refresh-token:
  *   post:
  *     summary: Rotate session credentials via Refresh Token
  *     tags: [Auth]
@@ -206,18 +206,22 @@ const router = Router();
  *       500:
  *         description: Internal server error
  *
- * /api/v1/auth/logout:
+ * /auth/logout:
  *   post:
  *     summary: End current local browser session
  *     tags: [Auth]
- *     description: Clears the client's current local session cookie and invalidates that singular token string inside the database log.
+ *     description: Blacklists the access token in Redis and marks the refresh token as used in the database. Requires both a valid Bearer token in the Authorization header and the refreshToken cookie.
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Logged out successfully. Refresh cookie is cleared.
+ *       401:
+ *         description: Unauthorized. Missing or invalid Bearer token, or missing refresh token cookie.
  *       500:
  *         description: Internal server error
  *
- * /api/v1/auth/logout-all:
+ * /auth/logout-all:
  *   post:
  *     summary: Revoke all active devices and sessions
  *     tags: [Auth]
@@ -232,7 +236,7 @@ const router = Router();
  *       500:
  *         description: Internal server error
  *
- * /api/v1/auth/admin-only:
+ * /auth/admin-only:
  *   get:
  *     summary: Fetch restricted administrative metrics
  *     tags: [Admin]

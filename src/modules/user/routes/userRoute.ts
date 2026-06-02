@@ -10,7 +10,7 @@ const router = Router();
 
 /**
  * @openapi
- * /api/v1/users/avatar:
+ * /users/avatar:
  *   patch:
  *     summary: Upload or update user profile avatar
  *     tags: [User]
@@ -45,7 +45,8 @@ const router = Router();
  *         description: Unauthorized. Missing or expired token
  *       500:
  *         description: Internal server error
- * /api/v1/users/myaccount:
+ * 
+ * /users/myaccount:
  *   get:
  *     summary: View your account profile details
  *     tags:

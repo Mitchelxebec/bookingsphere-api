@@ -11,6 +11,7 @@ export const findUserFromEmail = async (email: string) => {
       password_hash: users.password_hash,
       roles: users.roles,
       createdAt: users.created_at,
+      deleted_at: users.deleted_at,
     })
     .from(users)
     .where(eq(users.email, email.toLowerCase().trim()))

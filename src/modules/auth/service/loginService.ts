@@ -15,6 +15,11 @@ export const login = async (data: LoginUserData) => {
     throw new ApiError(401, "Invalid email or password");
   }
 
+  // Block login for soft-deleted accounts
+  if (user.deleted_at) {
+    throw new ApiError(410, "This account has been deactivated and cannot establish a session");
+  }
+
   // Compare user password with the hash
   const passwordHash = await PasswordService.compare(
     data.password,
@@ -30,7 +35,7 @@ export const login = async (data: LoginUserData) => {
     roles: user.roles,
   });
 
-  const { password_hash, ...sanitizedUser } = user;
+  const { password_hash, deleted_at, ...sanitizedUser } = user;
 
   const sevenDaysFromNow = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 

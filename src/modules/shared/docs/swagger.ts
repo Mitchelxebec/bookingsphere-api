@@ -8,6 +8,12 @@ const options = {
       version: "1.0.0",
       description: "Hotel booking platform API",
     },
+    servers: [
+      {
+        url: "/api/v1",
+        description: "Current API version",
+      },
+    ],
     components: {
       securitySchemes: {
         bearerAuth: {
