@@ -45,7 +45,7 @@ const router = Router();
  *         description: Unauthorized. Missing or expired token
  *       500:
  *         description: Internal server error
- * /users/myaccount:
+ * /api/v1/users/myaccount:
  *   get:
  *     summary: View your account profile details
  *     tags:

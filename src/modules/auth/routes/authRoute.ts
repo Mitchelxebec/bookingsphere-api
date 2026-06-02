@@ -17,7 +17,7 @@ const router = Router();
 
 /**
  * @openapi
- * /auth/register:
+ * /api/v1/auth/register:
  *   post:
  *     summary: Register a new user account
  *     tags: [Auth]
@@ -60,7 +60,8 @@ const router = Router();
  *         description: Conflict. Email address is already registered
  *       500:
  *         description: Internal server error
- * /auth/forgot-password:
+ * 
+ * /api/v1/auth/forgot-password:
  *   post:
  *     summary: Request a password reset OTP
  *     tags: [Auth]
@@ -82,7 +83,7 @@ const router = Router();
  *       429:
  *         description: Rate limit hit. Please wait 60 seconds before retrying.
  *
- * /auth/verify-otp:
+ * /api/v1/auth/verify-otp:
  *   post:
  *     summary: Verify the 6-digit email OTP
  *     tags: [Auth]
@@ -110,7 +111,7 @@ const router = Router();
  *       400:
  *         description: Invalid or expired verification code.
  *
- * /auth/reset-password:
+ * /api/v1/auth/reset-password:
  *   post:
  *     summary: Execute account password update
  *     tags: [Auth]
@@ -131,7 +132,7 @@ const router = Router();
  *       400:
  *         description: Reset token is invalid or has expired.
  *
- * /auth/login:
+ * /api/v1/auth/login:
  *   post:
  *     summary: Authenticate user credentials
  *     tags: [Auth]
@@ -176,7 +177,7 @@ const router = Router();
  *       500:
  *         description: Internal server error
  *
- * /auth/refresh-token:
+ * /api/v1/auth/refresh-token:
  *   post:
  *     summary: Rotate session credentials via Refresh Token
  *     tags: [Auth]
@@ -205,7 +206,7 @@ const router = Router();
  *       500:
  *         description: Internal server error
  *
- * /auth/logout:
+ * /api/v1/auth/logout:
  *   post:
  *     summary: End current local browser session
  *     tags: [Auth]
@@ -216,7 +217,7 @@ const router = Router();
  *       500:
  *         description: Internal server error
  *
- * /auth/logout-all:
+ * /api/v1/auth/logout-all:
  *   post:
  *     summary: Revoke all active devices and sessions
  *     tags: [Auth]
@@ -231,7 +232,7 @@ const router = Router();
  *       500:
  *         description: Internal server error
  *
- * /auth/admin-only:
+ * /api/v1/auth/admin-only:
  *   get:
  *     summary: Fetch restricted administrative metrics
  *     tags: [Admin]
