@@ -8,7 +8,7 @@ const seedAdmin = async () => {
 
   await db.insert(users).values({
     name: "Mitchel Admin",
-    email: "mitchelokoh96@gmail.com",
+    email: "admin@bookingsphere.com",
     password_hash: hashedPassword,
     roles: ["ADMIN"],
   });
