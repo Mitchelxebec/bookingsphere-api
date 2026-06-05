@@ -235,31 +235,7 @@ const router = Router();
  *         description: Unauthorized. Bad credentials.
  *       500:
  *         description: Internal server error
- *
- * /auth/admin-only:
- *   get:
- *     summary: Fetch restricted administrative metrics
- *     tags: [Admin]
- *     description: Multi-layered endpoint. Requires a valid userToken Bearer header AND an account containing the 'ADMIN' role profile.
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Administrative metrics loaded successfully.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success: { type: boolean, example: true }
- *                 adminMetrics: { type: object }
- *       401:
- *         description: Unauthorized. Invalid authorization bearer signature.
- *       403:
- *         description: Forbidden. Identity verified but lacks specific administrative permission strings.
- *       500:
- *         description: Internal server error
- */
+ * */
 
 router.post("/register", validateBody(registerSchema), signupController);
 router.post("/login", validateBody(loginSchema), loginController);
@@ -271,14 +247,6 @@ router.post("/refresh-token", checkCookieController);
 router.post("/forgot-password", forgotPasswordController);
 router.post("/verify-otp", verifyOtpController);
 router.post("/reset-password", resetPasswordController);
-
-// ADMIN ROUTE
-router.get(
-  "/admin-only",
-  userToken,
-  requireRoles(["ADMIN"]),
-  getAdminDashboard,
-);
 
 // LOGOUT
 router.post("/logout", logout);
