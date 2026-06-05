@@ -1,13 +1,31 @@
-import { integer, pgTable, text, uuid, varchar } from "drizzle-orm/pg-core";
+import {
+  index,
+  integer,
+  numeric,
+  pgTable,
+  text,
+  uuid,
+  varchar,
+} from "drizzle-orm/pg-core";
 import { properties } from "./properties.js";
+import { discounts } from "./discount.js";
 
-export const roomTypes = pgTable("room_types", {
-  id: uuid("id").primaryKey().defaultRandom().notNull(),
-  property_id: uuid("property_id")
-    .references(() => properties.id, { onDelete: "cascade" })
-    .notNull(),
-  name: varchar("name", { length: 100 }).notNull(),
-  price: integer("price").notNull(),
-  capacity: integer("capacity").notNull(),
-  description: text("description"),
-});
+export const roomTypes = pgTable(
+  "room_types",
+  {
+    id: uuid("id").primaryKey().defaultRandom().notNull(),
+    property_id: uuid("property_id")
+      .references(() => properties.id, { onDelete: "cascade" })
+      .notNull(),
+    discount_id: uuid("discount_id").references(() => discounts.id, {
+      onDelete: "set null",
+    }),
+    name: varchar("name", { length: 100 }).notNull(),
+    basePrice: numeric("base_price", { precision: 10, scale: 2 }).notNull(),
+    capacity: integer("capacity").notNull(),
+    description: text("description"),
+  },
+  (table) => ({
+    searchIdx: index("idx_room_type_search").on(table.capacity),
+  }),
+);

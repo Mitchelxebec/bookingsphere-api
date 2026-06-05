@@ -1,6 +1,4 @@
 import {
-  integer,
-  pgEnum,
   pgTable,
   text,
   timestamp,

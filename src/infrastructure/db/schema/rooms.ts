@@ -1,4 +1,4 @@
-import { pgTable, uuid, varchar } from "drizzle-orm/pg-core";
+import { boolean, pgTable, uuid, varchar } from "drizzle-orm/pg-core";
 import { roomTypes } from "./room_types.js";
 
 export const rooms = pgTable("rooms", {
@@ -7,4 +7,5 @@ export const rooms = pgTable("rooms", {
     .references(() => roomTypes.id, { onDelete: "restrict" })
     .notNull(),
   roomNumber: varchar("room_number", { length: 50 }).notNull(),
+  is_available: boolean("is_available").default(true).notNull(),
 });
