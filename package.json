@@ -11,7 +11,8 @@
   },
   "keywords": [
     "bookingsphere",
-    "backend"
+    "backend",
+    "redis"
   ],
   "author": "Mitchel Okoh",
   "license": "ISC",
