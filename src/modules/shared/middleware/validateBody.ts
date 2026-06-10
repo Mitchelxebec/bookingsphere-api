@@ -11,9 +11,11 @@ export const validateBody = (schema: ZodTypeAny) => {
         params: req.params,
       })) as any;
 
-      req.body = parsed.body;
-      req.query = parsed.query;
-      req.params = parsed.params;
+      // Only reassign body — query and params are read-only in newer Express/Node versions
+      if (parsed.body !== undefined) req.body = parsed.body;
+      if (parsed.params !== undefined) {
+        Object.assign(req.params, parsed.params);
+      }
 
       next();
     } catch (error) {
