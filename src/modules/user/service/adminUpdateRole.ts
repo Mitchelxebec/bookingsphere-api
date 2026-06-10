@@ -33,7 +33,7 @@ export const updateUserRole = async ({
   const targetIsAdmin = targetUser.roles.includes("ADMIN");
 
   if (targetIsSuperAdmin)
-    throw new ApiError(403, "Super Admins cannot be banned by anyone");
+    throw new ApiError(403, "Super Admins cannot be modified by anyone");
 
   if (targetIsAdmin && !isSuperAdmin)
     throw new ApiError(

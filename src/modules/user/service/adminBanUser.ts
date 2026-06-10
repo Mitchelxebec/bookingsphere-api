@@ -18,7 +18,7 @@ export const banUserService = async ({
     throw new ApiError(400, "You cannot ban yourself");
 
   if (!reason || reason.trim().length === 0)
-    throw new ApiError(400, "A valid reason must be provided to ban a user");
+    throw new ApiError(400, "A reason is required to ban a user");
 
   const isSuperAdmin = actorRoles.includes("SUPERADMIN");
   const isAdmin = actorRoles.includes("ADMIN");
