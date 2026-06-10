@@ -11,14 +11,18 @@ interface LoginUserData {
 
 export const login = async (data: LoginUserData) => {
   const user = await findUserFromEmail(data.email);
-  if (!user) {
-    throw new ApiError(401, "Invalid email or password");
-  }
+  if (!user) throw new ApiError(401, "Invalid email or password");
+
+  // Block login if user is banned
+  if (user.is_banned)
+    throw new ApiError(403, "Your account has been suspended");
 
   // Block login for soft-deleted accounts
-  if (user.deleted_at) {
-    throw new ApiError(410, "This account has been deactivated and cannot establish a session");
-  }
+  if (user.deleted_at)
+    throw new ApiError(
+      410,
+      "This account has been deactivated and cannot establish a session",
+    );
 
   // Compare user password with the hash
   const passwordHash = await PasswordService.compare(
@@ -26,9 +30,7 @@ export const login = async (data: LoginUserData) => {
     user.password_hash,
   );
 
-  if (!passwordHash) {
-    throw new ApiError(401, "Invalid email or password");
-  }
+  if (!passwordHash) throw new ApiError(401, "Invalid email or password");
 
   const tokens = TokenService.generateTokenPair({
     userId: user.id,
@@ -44,7 +46,7 @@ export const login = async (data: LoginUserData) => {
     tokens.refreshToken,
     sevenDaysFromNow,
   );
-  
+
   return {
     user: sanitizedUser,
     tokens,

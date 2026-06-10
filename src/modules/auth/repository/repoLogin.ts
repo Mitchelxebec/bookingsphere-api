@@ -10,6 +10,8 @@ export const findUserFromEmail = async (email: string) => {
       email: users.email,
       password_hash: users.password_hash,
       roles: users.roles,
+      is_banned: users?.is_banned,
+      ban_reason: users.ban_reason,
       createdAt: users.created_at,
       deleted_at: users.deleted_at,
     })
@@ -23,12 +25,12 @@ export const findUserFromEmail = async (email: string) => {
 export const updatePasswordByEmail = async (
   email: string,
   hashedNewPassword: string,
-): Promise<boolean> => {
+): Promise<string | null> => {
   const result = await db
     .update(users)
     .set({ password_hash: hashedNewPassword })
     .where(eq(users.email, email))
     .returning({ id: users.id });
 
-  return result.length > 0;
+  return result[0]?.id ?? null;
 };

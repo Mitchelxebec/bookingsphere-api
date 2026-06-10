@@ -1,10 +1,11 @@
 import { Router } from "express";
+import rateLimit from "express-rate-limit";
 import { signupController } from "../controller/registerController.js";
 import { loginController } from "../controller/loginController.js";
 import { requireRoles } from "../../shared/middleware/roleGuard.js";
 import { userToken } from "../../shared/middleware/tokenMiddleware.js";
 import { getAdminDashboard } from "../controller/adminController.js";
-import { validateBody } from "../middleware/validateBody.js";
+import { validateBody } from "../../shared/middleware/validateBody.js";
 import { loginSchema, registerSchema } from "../validators/authValidator.js";
 import { checkCookieController } from "../controller/refreshTokenController.js";
 import { logout } from "../controller/logout.js";
@@ -14,6 +15,33 @@ import { verifyOtpController } from "../controller/verifyOtpController.js";
 import { resetPasswordController } from "../controller/resetPasswordController.js";
 
 const router = Router();
+
+// Strict limiter for login — 10 attempts per 15 minutes per IP
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: { success: false, message: "Too many login attempts. Please try again in 15 minutes." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Strict limiter for OTP verification — 5 attempts per 10 minutes per IP
+const otpLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 5,
+  message: { success: false, message: "Too many verification attempts. Please request a new OTP." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Limiter for forgot-password — 5 requests per 15 minutes per IP
+const forgotPasswordLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: { success: false, message: "Too many password reset requests. Please try again later." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 /**
  * @openapi
@@ -238,14 +266,14 @@ const router = Router();
  * */
 
 router.post("/register", validateBody(registerSchema), signupController);
-router.post("/login", validateBody(loginSchema), loginController);
+router.post("/login", loginLimiter, validateBody(loginSchema), loginController);
 
 // REGENERATE NEW REFRESH TOKEN
 router.post("/refresh-token", checkCookieController);
 
 // FORGOT PASSWORD
-router.post("/forgot-password", forgotPasswordController);
-router.post("/verify-otp", verifyOtpController);
+router.post("/forgot-password", forgotPasswordLimiter, forgotPasswordController);
+router.post("/verify-otp", otpLimiter, verifyOtpController);
 router.post("/reset-password", resetPasswordController);
 
 // LOGOUT

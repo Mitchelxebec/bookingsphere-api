@@ -5,10 +5,14 @@ interface TokenPayload {
   roles: string[];
 }
 
-const ACCESS_SECRET =
-  process.env.JWT_ACCESS_SECRET || "fallback_super_secret_access_key_123";
-const REFRESH_SECRET =
-  process.env.JWT_REFRESH_SECRET || "fallback_super_refresh_access_key_456";
+const ACCESS_SECRET = process.env.JWT_ACCESS_SECRET;
+const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
+
+if (!ACCESS_SECRET || !REFRESH_SECRET) {
+  throw new Error(
+    "FATAL: JWT_ACCESS_SECRET and JWT_REFRESH_SECRET must be set in environment variables. Refusing to start.",
+  );
+}
 
 export const TokenService = {
   // Short-lived Access Token (used to authorize API requests)

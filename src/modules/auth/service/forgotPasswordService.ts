@@ -9,6 +9,12 @@ export const forgotPassword = async (email: string) => {
   const user = await findUserByEmail(email);
   if (!user) throw new ApiError(404, "User not found. Please sign up");
 
+  if (user.deleted_at)
+    throw new ApiError(410, "This account has been deactivated. Password reset is not available.");
+
+  if (user.is_banned)
+    throw new ApiError(403, "This account has been suspended. Please contact support.");
+
   const cooldownKey = `otp:cooldown:${email}`;
   const isCooldownActive = await redis.exists(cooldownKey);
   if (isCooldownActive)

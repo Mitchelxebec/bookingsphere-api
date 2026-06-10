@@ -2,12 +2,14 @@ import jwt from "jsonwebtoken";
 import { ApiError } from "../../shared/utils/ApiError.js";
 import { TokenRotationRepository } from "../repository/repoTokenRotation.js";
 import { TokenService } from "../utils/tokenService.js";
-import { db } from "../../../infrastructure/db/connection.js";
-import { users } from "../../../infrastructure/db/schema/users.js";
-import { eq } from "drizzle-orm";
 
-const REFRESH_TOKEN =
-  process.env.JWT_REFRESH_SECRET || "fallback_super_secret_refresh_key_456";
+const REFRESH_TOKEN = process.env.JWT_REFRESH_SECRET;
+
+if (!REFRESH_TOKEN) {
+  throw new Error(
+    "FATAL: JWT_REFRESH_SECRET must be set in environment variables. Refusing to start.",
+  );
+}
 
 interface RefreshTokenPayload {
   userId: string;
@@ -29,7 +31,13 @@ export const rotateTokens = async (incomingRefreshToken: string) => {
   const tokenRecord =
     await TokenRotationRepository.findToken(incomingRefreshToken);
   if (!tokenRecord) {
-    throw new ApiError(401, "Refresh token does not exisst");
+    throw new ApiError(401, "Refresh token does not exist");
+  }
+
+  // Check if the token has passed its expiry date
+  if (new Date() > tokenRecord.expiresAt) {
+    await TokenRotationRepository.markAsUsed(tokenRecord.id);
+    throw new ApiError(401, "Refresh token has expired. Please log in again.");
   }
 
   // If token is marked as used delete

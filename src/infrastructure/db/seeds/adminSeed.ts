@@ -7,13 +7,15 @@ const seedAdmin = async () => {
   const hashedPassword = await bcrypt.hash("yourAdminPassword123!", 12);
 
   await db.insert(users).values({
-    name: "Mitchel Admin",
-    email: "admin@bookingsphere.com",
+    name: "Mitchel Super Admin",
+    email: "super@bookingsphere.com",
     password_hash: hashedPassword,
-    roles: ["ADMIN"],
+    roles: ["SUPERADMIN"],
+    is_banned: false,
+    ban_reason: "",
   });
 
-  console.log("✅ Admin user created successfully");
+  console.log("✅ Super Admin user created successfully");
   process.exit(0);
 };
 

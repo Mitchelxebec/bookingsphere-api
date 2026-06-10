@@ -16,32 +16,29 @@ export const userToken = async (
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    throw new ApiError(401, "Access denied. Authentication token missing");
+    return next(new ApiError(401, "Access denied. Authentication token missing"));
   }
 
   const accessToken = authHeader.split(" ")[1];
 
   if (!accessToken) {
-    throw new ApiError(401, "Access denied. Token payload is empty");
+    return next(new ApiError(401, "Access denied. Token payload is empty"));
   }
 
-  const isBlacklisted = await isTokenBlacklisted(accessToken);
-  if (isBlacklisted)
-    throw new ApiError(
-      401,
-      "Access denied. This token has been revoked via logout.",
-    );
-
   try {
+    const isBlacklisted = await isTokenBlacklisted(accessToken);
+    if (isBlacklisted) {
+      return next(new ApiError(401, "Access denied. This token has been revoked via logout."));
+    }
+
     const decoded: UserPayload = jwt.verify(
       accessToken,
-      process.env.JWT_ACCESS_SECRET || "fallback_super_secret_access_key_123",
+      process.env.JWT_ACCESS_SECRET!,
     ) as UserPayload;
 
     req.user = decoded;
-
     next();
   } catch (error) {
-    throw new ApiError(401, "Access denied. Invalid or expired token");
+    return next(new ApiError(401, "Access denied. Invalid or expired token"));
   }
 };

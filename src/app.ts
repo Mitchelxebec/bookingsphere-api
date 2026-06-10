@@ -7,6 +7,7 @@ import { swaggerSpec } from "./modules/shared/docs/swagger.js";
 import authRoute from "./modules/auth/routes/authRoute.js";
 import userRoute from "./modules/user/routes/userRoute.js";
 import { errorHandler } from "./modules/shared/utils/errorMiddleware.js";
+import { TokenRotationRepository } from "./modules/auth/repository/repoTokenRotation.js";
 
 dotenv.config();
 
@@ -40,6 +41,18 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 5005;
 app.listen(PORT, () => {
   console.log(`🚀 BookingSphere API running on port ${PORT}`);
+
+  // Purge expired/used refresh tokens on startup, then every 24 hours
+  const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+  TokenRotationRepository.purgeInvalidTokens()
+    .then(() => console.log("🧹 Expired refresh tokens purged on startup"))
+    .catch((err) => console.error("Failed to purge refresh tokens:", err));
+
+  setInterval(() => {
+    TokenRotationRepository.purgeInvalidTokens()
+      .then(() => console.log("🧹 Scheduled refresh token purge complete"))
+      .catch((err) => console.error("Scheduled purge failed:", err));
+  }, TWENTY_FOUR_HOURS);
 });
 
 export default app;

@@ -1,11 +1,20 @@
 import type { NextFunction, Request, Response } from "express";
-import { z, type ZodSchema } from "zod";
-import { ApiError } from "../../shared/utils/ApiError.js";
+import { z, type ZodTypeAny } from "zod";
+import { ApiError } from "../utils/ApiError.js";
 
-export const validateBody = (schema: ZodSchema) => {
+export const validateBody = (schema: ZodTypeAny) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      req.body = await schema.parseAsync(req.body);
+      const parsed = (await schema.parseAsync({
+        body: req.body,
+        query: req.query,
+        params: req.params,
+      })) as any;
+
+      req.body = parsed.body;
+      req.query = parsed.query;
+      req.params = parsed.params;
+
       next();
     } catch (error) {
       if (error instanceof z.ZodError) {
