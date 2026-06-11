@@ -52,5 +52,6 @@ export const updateUserRole = async ({
     }
   }
 
-  return await updateUserRoleRepo(targetUserId, newRole, actorUserId);
+  const result = await updateUserRoleRepo(targetUserId, newRole, actorUserId);
+  return { result };
 };

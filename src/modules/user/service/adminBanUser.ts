@@ -44,5 +44,6 @@ export const banUserService = async ({
   if (targetIsAdmin && !isSuperAdmin)
     throw new ApiError(403, "Regular Admins cannot ban other Admins");
 
-  return await banUser(targetUserId, reason.trim(), actorUserId);
+  const result = await banUser(targetUserId, reason.trim(), actorUserId);
+  return { result };
 };

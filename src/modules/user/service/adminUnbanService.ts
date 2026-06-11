@@ -41,5 +41,6 @@ export const unbanUserService = async ({
   if (targetIsAdmin && !isSuperAdmin)
     throw new ApiError(403, "Regular Admins cannot unban other Admin accounts");
 
-  return await unBanUser(targetUserId, actorUserId);
+  const result = await unBanUser(targetUserId, actorUserId);
+  return { result };
 };
