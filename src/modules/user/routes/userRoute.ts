@@ -6,7 +6,7 @@ import { uploadController } from "../controller/uploadImgController.js";
 import { myAccountController } from "../controller/myAccount.js";
 import { updateMyProfile } from "../controller/updateMyProfile.js";
 import { deleteMyProfile } from "../controller/deleteProfile.js";
-import { validateBody } from "../../shared/middleware/validateBody.js";
+import { validateBody, validateRequest } from "../../shared/middleware/validateBody.js";
 import {
   banUserSchema,
   unbanUserSchema,
@@ -170,21 +170,21 @@ router.patch(
   "/admin/:id/role",
   userToken,
   requireRoles(["ADMIN", "SUPERADMIN"]),
-  validateBody(updateRoleSchema),
+  validateRequest(updateRoleSchema),
   updateRoleController,
 );
 router.patch(
   "/admin/:id/ban",
   userToken,
   requireRoles(["ADMIN", "SUPERADMIN"]),
-  validateBody(banUserSchema),
+  validateRequest(banUserSchema),
   banUserController,
 );
 router.patch(
   "/admin/:id/unban",
   userToken,
   requireRoles(["ADMIN", "SUPERADMIN"]),
-  validateBody(unbanUserSchema),
+  validateRequest(unbanUserSchema),
   unbanUserController,
 );
 
