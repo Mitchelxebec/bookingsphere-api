@@ -1,24 +1,23 @@
-import { ApiError } from "../../shared/utils/ApiError.js";
-import { getUserById, unBanUser } from "../repository/adminRepo.js";
+import { ApiError } from "../../../shared/utils/ApiError.js";
+import { getUserById, unBanUser } from "../../repository/adminRepo.js";
 
 interface UnbanUserDTO {
   targetUserId: string;
+  actorRole: string[];
   actorUserId: string;
-  actorRoles: string[];
 }
 
-export const unbanUserService = async ({
+export const unBanUserService = async ({
   targetUserId,
+  actorRole,
   actorUserId,
-  actorRoles,
 }: UnbanUserDTO) => {
   if (targetUserId === actorUserId)
     throw new ApiError(400, "You cannot unban yourself");
 
-  const isSuperAdmin = actorRoles.includes("SUPERADMIN");
-  const isAdmin = actorRoles.includes("ADMIN");
-  // STOP anyone who is neither ADMIN nor SUPERADMIN from unbanning
-  if (!isSuperAdmin && !isAdmin)
+  const isSuperAdmin = actorRole.includes("SUPERADMIN");
+  const isAdmin = actorRole.includes("ADMIN");
+  if (isSuperAdmin && isAdmin)
     throw new ApiError(
       403,
       "Access denied: Insufficient administrative privileges",
@@ -39,8 +38,8 @@ export const unbanUserService = async ({
     );
 
   if (targetIsAdmin && !isSuperAdmin)
-    throw new ApiError(403, "Regular Admins cannot unban other Admin accounts");
+    throw new ApiError(403, "Regular Admin cannot unban other Admin accounts");
 
-  const result = await unBanUser(targetUserId, actorUserId);
-  return { result };
+  const unbanUser = await unBanUser(targetUserId, actorUserId);
+  return unBanUser;
 };

@@ -6,6 +6,7 @@ import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./modules/shared/docs/swagger.js";
 import authRoute from "./modules/auth/routes/authRoute.js";
 import userRoute from "./modules/user/routes/userRoute.js";
+import adminRoute from "./modules/user/routes/admin/adminRoute.js";
 import { errorHandler } from "./modules/shared/utils/errorMiddleware.js";
 import { TokenRotationRepository } from "./modules/auth/repository/repoTokenRotation.js";
 
@@ -29,6 +30,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/", limiter);
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/users", userRoute);
+app.use("/api/v1/users/admin", adminRoute);
 
 app.get("/", (req: Request, res: Response) => {
   res.status(200).json({

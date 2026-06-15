@@ -1,22 +1,12 @@
 import { Router } from "express";
 import { userToken } from "../../shared/middleware/tokenMiddleware.js";
-import { requireRoles } from "../../shared/middleware/roleGuard.js";
 import upload from "../../../infrastructure/storage/multer.js";
 import { uploadController } from "../controller/uploadImgController.js";
 import { myAccountController } from "../controller/myAccount.js";
 import { updateMyProfile } from "../controller/updateMyProfile.js";
 import { deleteMyProfile } from "../controller/deleteProfile.js";
 import { validateBody, validateRequest } from "../../shared/middleware/validateBody.js";
-import {
-  banUserSchema,
-  unbanUserSchema,
-  updateRoleSchema,
-} from "../validators/adminValidators.js";
 import { updateProfileSchema } from "../validators/userValidators.js";
-import { getAllUserController } from "../controller/adminAllUser.js";
-import { updateRoleController } from "../controller/adminUpdateRoleController.js";
-import { banUserController } from "../controller/adminBanController.js";
-import { unbanUserController } from "../controller/adminUnbanController.js";
 
 const router = Router();
 
@@ -164,28 +154,5 @@ router.get("/myaccount", userToken, myAccountController);
 router.patch("/myaccount", userToken, validateBody(updateProfileSchema), updateMyProfile);
 router.delete("/myaccount", userToken, deleteMyProfile);
 
-// ADMIN ROUTE
-router.get("/admin/all", userToken, requireRoles(["ADMIN", "SUPERADMIN"]), getAllUserController);
-router.patch(
-  "/admin/:id/role",
-  userToken,
-  requireRoles(["ADMIN", "SUPERADMIN"]),
-  validateRequest(updateRoleSchema),
-  updateRoleController,
-);
-router.patch(
-  "/admin/:id/ban",
-  userToken,
-  requireRoles(["ADMIN", "SUPERADMIN"]),
-  validateRequest(banUserSchema),
-  banUserController,
-);
-router.patch(
-  "/admin/:id/unban",
-  userToken,
-  requireRoles(["ADMIN", "SUPERADMIN"]),
-  validateRequest(unbanUserSchema),
-  unbanUserController,
-);
 
 export default router;

@@ -8,12 +8,14 @@ export const requireRoles = (allowedRoles: string[]) => {
     const hasPermission = userRoles.some((role) => allowedRoles.includes(role));
 
     if (!hasPermission) {
-      next(
+      return next(
         new ApiError(
           403,
           "Access denied. You don't have required role permissions ",
         ),
       );
     }
+
+    next()
   };
 };

@@ -1,8 +1,8 @@
 import type { NextFunction, Request, Response } from "express";
-import { updateUserRole } from "../service/adminUpdateRole.js";
-import { ApiError } from "../../shared/utils/ApiError.js";
+import { ApiError } from "../../../shared/utils/ApiError.js";
+import { changeUserRole } from "../../service/admin/changeRole.js";
 
-export const updateRoleController = async (
+export const changeUserRoleController = async (
   req: Request,
   res: Response,
   next: NextFunction,
@@ -11,21 +11,21 @@ export const updateRoleController = async (
     const targetUserId = req.params.id as string;
     if (!targetUserId) throw new ApiError(403, "Missing user ID");
 
-    const { newRole } = req.body;
-    const actorUser = req.user;
-
-    if (!actorUser || !actorUser.userId || !actorUser.roles) {
+    const { role } = req.body;
+    const actorInfo = req.user;
+    
+    if (!actorInfo || !actorInfo.userId || !actorInfo.roles) {
       throw new ApiError(
         401,
         "Unauthorized: Administrative session data missing.",
       );
     }
 
-    const result = await updateUserRole({
+    const result = await changeUserRole({
       targetUserId,
-      newRole,
-      actorUserId: actorUser?.userId,
-      actorRoles: actorUser?.roles,
+      newRole: role,
+      actorUserId: actorInfo?.userId,
+      actorRole: actorInfo?.roles,
     });
 
     return res.status(200).json({

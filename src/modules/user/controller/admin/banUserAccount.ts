@@ -1,8 +1,8 @@
 import type { NextFunction, Request, Response } from "express";
-import { ApiError } from "../../shared/utils/ApiError.js";
-import { unbanUserService } from "../service/adminUnbanService.js";
+import { ApiError } from "../../../shared/utils/ApiError.js";
+import { banUserService } from "../../service/admin/banUserAccount.js";
 
-export const unbanUserController = async (
+export const banUserController = async (
   req: Request,
   res: Response,
   next: NextFunction,
@@ -11,22 +11,25 @@ export const unbanUserController = async (
     const targetUserId = req.params.id as string;
     if (!targetUserId) throw new ApiError(403, "Missing user ID");
 
-    const actorUser = req.user;
-    if (!actorUser || !actorUser.userId || !actorUser.roles)
+    const { reason } = req.body;
+
+    const actorRole = req.user;
+    if (!actorRole || !actorRole.roles || !actorRole.userId)
       throw new ApiError(
         401,
         "Unauthorized: Administrative session data missing.",
       );
 
-    const result = await unbanUserService({
+    const result = await banUserService({
       targetUserId,
-      actorUserId: actorUser.userId,
-      actorRoles: actorUser.roles,
+      reason,
+      actorRole: actorRole.roles,
+      actorUserId: actorRole.userId,
     });
 
     res.status(200).json({
       success: true,
-      message: "User has successfully been unbanned",
+      message: "User successfully banned",
       data: result,
     });
   } catch (error) {
