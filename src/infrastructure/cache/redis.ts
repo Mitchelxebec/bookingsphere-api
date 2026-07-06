@@ -31,3 +31,24 @@ export const getOtp = async (email: string) => {
 export const deleteOtp = async (email: string) => {
   await redis.del(`otp:${email}`);
 };
+
+// Store any data in cache with a TTL (in seconds)
+export const setCache = async (
+  key: string,
+  data: unknown,
+  ttlSeconds: number,
+): Promise<void> => {
+  await redis.set(key, JSON.stringify(data), "EX", ttlSeconds);
+};
+
+// Get data from cache, returns null if not found
+export const getCache = async <T>(key: string): Promise<T | null> => {
+  const data = await redis.get(key);
+  if (!data) return null;
+  return JSON.parse(data) as T;
+};
+
+// Delete a cache key (call this on writes)
+export const deleteCache = async (key: string): Promise<void> => {
+  await redis.del(key);
+};

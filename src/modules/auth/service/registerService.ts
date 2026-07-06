@@ -35,6 +35,7 @@ export const register = async (
   const tokens = TokenService.generateTokenPair({
     userId: user.id,
     roles: user.roles,
+    proprietorStatus: user.proprietorStatus,
   });
 
   const sevenDaysFromNow = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);

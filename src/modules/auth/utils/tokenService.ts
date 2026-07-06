@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 interface TokenPayload {
   userId: string;
   roles: string[];
+  proprietorStatus: string;
 }
 
 const ACCESS_SECRET = process.env.JWT_ACCESS_SECRET;

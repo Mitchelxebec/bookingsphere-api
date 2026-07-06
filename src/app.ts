@@ -6,15 +6,33 @@ import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./modules/shared/docs/swagger.js";
 import authRoute from "./modules/auth/routes/authRoute.js";
 import userRoute from "./modules/user/routes/userRoute.js";
-import adminRoute from "./modules/user/routes/admin/adminRoute.js";
+import kycRoute from "./modules/kyc/routes/kycRoutes.js";
+import propertyRoute from "./modules/property/properties/router/publicRoute.js";
+import roomTypeRoute from "./modules/property/roomType/routes/roomTypeRoutes.js";
+import reservationRoute from "./modules/reservation/routes/reservationRoutes.js";
+import wishlistRoute from "./modules/wishlist/routes/wishlistRoutes.js";
+import paymentRoute from "./modules/payment/routes/paymentRoute.js";
+import paystackWebhookRoute from "./modules/payment/routes/webhookRoutes.js";
+import reviewRoute from "./modules/review/routes/reviewRoutes.js";
+
+// PROPRIETOR
+import proprietorPropertyRoute from "./modules/property/properties/router/proprietor/proprietorRouter.js";
+
+//  ADMIN
+import adminPropertyRoute from "./modules/property/properties/router/admin/adminRoute.js";
+import adminUserRoute from "./modules/user/routes/admin/adminRoute.js";
+import adminKycRoute from "./modules/kyc/routes/admin/adminKycRoute.js";
 import { errorHandler } from "./modules/shared/utils/errorMiddleware.js";
 import { TokenRotationRepository } from "./modules/auth/repository/repoTokenRotation.js";
+import { startExpiryJob } from "./infrastructure/jobs/expireReservation.js";
 
 dotenv.config();
 
 const app = express();
 
 app.set("trust proxy", 1);
+
+app.use("/api/v1/webhooks", paystackWebhookRoute);
 
 // Global Middleware Configuration
 app.use(express.json());
@@ -30,7 +48,17 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/", limiter);
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/users", userRoute);
-app.use("/api/v1/users/admin", adminRoute);
+app.use("/api/v1/users/admin", adminUserRoute);
+app.use("/api/v1/kyc", kycRoute);
+app.use("/api/v1/kyc/admin", adminKycRoute);
+app.use("/api/v1/properties", propertyRoute);
+app.use("/api/v1/properties/proprietor", proprietorPropertyRoute);
+app.use("/api/v1/properties/admin", adminPropertyRoute);
+app.use("/api/v1/properties/:propertyId/room-types", roomTypeRoute);
+app.use("/api/v1/reservations", reservationRoute);
+app.use("/api/v1/wishlist", wishlistRoute);
+app.use("/api/v1/payments", paymentRoute);
+app.use("/api/v1/reviews", reviewRoute);
 
 app.get("/", (req: Request, res: Response) => {
   res.status(200).json({
@@ -55,6 +83,9 @@ app.listen(PORT, () => {
       .then(() => console.log("🧹 Scheduled refresh token purge complete"))
       .catch((err) => console.error("Scheduled purge failed:", err));
   }, TWENTY_FOUR_HOURS);
+
+  // Start reservation expiry job
+  startExpiryJob();
 });
 
 export default app;

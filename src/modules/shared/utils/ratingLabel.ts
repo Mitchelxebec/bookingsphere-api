@@ -1,6 +1,6 @@
 export const getRatingLabel = (rating: number): string => {
   switch (true) {
-    case !rating:
+    case rating === null || rating === undefined:
       return "No rating";
     case rating >= 9:
       return "Exceptional";

@@ -3,7 +3,7 @@ import { getUserById, updateUserRoleRepo } from "../../repository/adminRepo.js";
 
 interface UpdateUserDTO {
   targetUserId: string;
-  newRole: ("GUEST" | "PROPRIETOR" | "ADMIN" | "SUPERADMIN")[];
+  newRole: ("GUEST" | "ADMIN" | "SUPERADMIN")[];
   actorRole: string[];
   actorUserId: string;
 }
@@ -16,6 +16,15 @@ export const changeUserRole = async ({
 }: UpdateUserDTO) => {
   if (targetUserId === actorUserId)
     throw new ApiError(400, "You cannot change your own role");
+
+  // 1. RUNTIME GUARD: Block manual assignments of the PROPRIETOR role
+  // We use type casting (as string[]) to check raw incoming request payloads safely
+  if ((newRole as string[]).includes("PROPRIETOR")) {
+    throw new ApiError(
+      400,
+      "Bad Request: The PROPRIETOR role cannot be assigned manually. It must be granted through the KYC approval workflow.",
+    );
+  }
 
   const isSuperAdmin = actorRole.includes("SUPERADMIN");
   const isAdmin = actorRole.includes("ADMIN");
@@ -54,5 +63,5 @@ export const changeUserRole = async ({
     actorUserId,
   );
 
-  return updatedUser
+  return updatedUser;
 };

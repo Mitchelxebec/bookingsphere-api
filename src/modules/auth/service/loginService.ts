@@ -35,6 +35,7 @@ export const login = async (data: LoginUserData) => {
   const tokens = TokenService.generateTokenPair({
     userId: user.id,
     roles: user.roles,
+    proprietorStatus: user.proprietorStatus
   });
 
   const { password_hash, deleted_at, ...sanitizedUser } = user;

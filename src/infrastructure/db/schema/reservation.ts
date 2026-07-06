@@ -1,11 +1,10 @@
 import {
   date,
-  integer,
+  numeric,
   pgEnum,
   pgTable,
   timestamp,
   uuid,
-  varchar,
 } from "drizzle-orm/pg-core";
 import { users } from "./users.js";
 import { rooms } from "./rooms.js";
@@ -30,7 +29,7 @@ export const reservations = pgTable("reservations", {
   status: reservationStatusEnum("status").default("PENDING").notNull(),
   checkIn: date("check_in").notNull(),
   checkOut: date("check_out").notNull(),
-  totalPrice: integer("total_price").notNull(),
+  totalPrice: numeric("total_price", { precision: 10, scale: 2 }).notNull(),
   expiresAt: timestamp("expires_at").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });

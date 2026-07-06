@@ -17,6 +17,12 @@ export const propertyTypeEnum = pgEnum("property_type", [
   "GUESTHOUSE",
 ]);
 
+export const approvalStatusEnum = pgEnum("approval_status", [
+  "PENDING",
+  "APPROVED",
+  "REJECTED",
+]);
+
 export const properties = pgTable(
   "properties",
   {
@@ -31,7 +37,9 @@ export const properties = pgTable(
     ownerId: uuid("owner_id")
       .references(() => users.id, { onDelete: "cascade" })
       .notNull(),
-    isApproved: boolean("is_approved").default(false).notNull(),
+    approvalStatus: approvalStatusEnum("approval_status").default("PENDING").notNull(),
+    rejection_reason: text("rejection_reason"),
+    is_deleted: boolean("is_deleted").default(false),
     deleted_at: timestamp("deleted_at"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
@@ -39,8 +47,8 @@ export const properties = pgTable(
     searchIdx: index("idx_properties_search").on(
       table.city,
       table.country,
-      table.isApproved,
+      table.approvalStatus,
       table.property_type,
-    )
-  })
+    ),
+  }),
 );

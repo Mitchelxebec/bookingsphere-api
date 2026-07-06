@@ -11,22 +11,20 @@ if (!REFRESH_TOKEN) {
   );
 }
 
-interface RefreshTokenPayload {
-  userId: string;
-  roles: ("GUEST" | "PROPRIETOR" | "ADMIN")[];
-}
-
 export const rotateTokens = async (incomingRefreshToken: string) => {
   //  verify incoming token
-  let decoded: RefreshTokenPayload;
+  let decoded: Express.Request["user"];
+
   try {
     decoded = jwt.verify(
       incomingRefreshToken,
       REFRESH_TOKEN,
-    ) as RefreshTokenPayload;
+    ) as Express.Request["user"];
   } catch (error) {
     throw new ApiError(401, "Invalid or expired refresh token signature");
   }
+
+  if (!decoded) throw new ApiError(401, "Access denied. Invalid token payload");
 
   const tokenRecord =
     await TokenRotationRepository.findToken(incomingRefreshToken);
@@ -50,7 +48,9 @@ export const rotateTokens = async (incomingRefreshToken: string) => {
   }
 
   // Check if the users account has been deleted and Fetch users current role
-  const userProfile = await TokenRotationRepository.fetchUser(tokenRecord.userId);
+  const userProfile = await TokenRotationRepository.fetchUser(
+    tokenRecord.userId,
+  );
   if (!userProfile) throw new ApiError(404, "User does not exist");
   if (userProfile?.deleted_at) throw new ApiError(404, "User does not exist");
 
@@ -63,6 +63,7 @@ export const rotateTokens = async (incomingRefreshToken: string) => {
   const newTokens = TokenService.generateTokenPair({
     userId: tokenRecord.userId,
     roles: currentRole,
+    proprietorStatus: userProfile.proprietorStatus,
   });
 
   //   Save the brand new tokens

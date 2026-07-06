@@ -14,6 +14,7 @@ export const findUserFromEmail = async (email: string) => {
       ban_reason: users.ban_reason,
       createdAt: users.created_at,
       deleted_at: users.deleted_at,
+      proprietorStatus: users.proprietorStatus
     })
     .from(users)
     .where(eq(users.email, email.toLowerCase().trim()))

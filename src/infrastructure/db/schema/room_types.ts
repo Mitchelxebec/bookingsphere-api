@@ -1,9 +1,11 @@
 import {
+  boolean,
   index,
   integer,
   numeric,
   pgTable,
   text,
+  timestamp,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -24,6 +26,8 @@ export const roomTypes = pgTable(
     basePrice: numeric("base_price", { precision: 10, scale: 2 }).notNull(),
     capacity: integer("capacity").notNull(),
     description: text("description"),
+    is_deleted: boolean("is_deleted").default(false).notNull(),
+    deleted_at: timestamp("deleted_at"),
   },
   (table) => ({
     searchIdx: index("idx_room_type_search").on(table.capacity),

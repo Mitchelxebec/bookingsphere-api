@@ -1,0 +1,1 @@
+ALTER TABLE "wishlist" ADD CONSTRAINT "wishlist_user_property_unique" UNIQUE("user_id","property_id");

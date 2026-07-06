@@ -24,10 +24,13 @@ export interface CreatedUserResult {
   name: string;
   email: string;
   roles: string[];
+  proprietorStatus: "NONE" | "PENDING" | "APPROVED" | "REJECTED" | "SUSPENDED";
   createdAt: string | Date;
 }
 
-export const createUser = async (data: CreateUserData): Promise<CreatedUserResult> => {
+export const createUser = async (
+  data: CreateUserData,
+): Promise<CreatedUserResult> => {
   const [newUser] = await db
     .insert(users)
     .values({
@@ -35,12 +38,14 @@ export const createUser = async (data: CreateUserData): Promise<CreatedUserResul
       email: data.email.toLowerCase().trim(),
       password_hash: data.passwordHash,
       roles: ["GUEST"],
+      proprietorStatus: "NONE",
     })
     .returning({
       id: users.id,
       name: users.name,
       email: users.email,
       roles: users.roles,
+      proprietorStatus: users.proprietorStatus,
       createdAt: users.created_at,
     });
 
@@ -50,5 +55,7 @@ export const createUser = async (data: CreateUserData): Promise<CreatedUserResul
       "Database failed to insert and return the user profile.",
     );
   }
+
+  console.log("Created user:", newUser);
   return newUser;
 };

@@ -9,6 +9,14 @@ import {
 } from "drizzle-orm/pg-core";
 import type { AnyPgColumn } from "drizzle-orm/pg-core";
 
+export const proprietorStatusEnum = pgEnum("proprietor_status", [
+  "NONE", // Standard guest, never applied
+  "PENDING",
+  "APPROVED",
+  "REJECTED",
+  "SUSPENDED", // Banned or paused by an administrator
+]);
+
 export const usersEnumRoles = pgEnum("users_role", [
   "GUEST",
   "PROPRIETOR",
@@ -45,6 +53,13 @@ export const users = pgTable("users", {
       onDelete: "set null",
     },
   ),
+
+  // New KYC Tracking Fields
+  proprietorStatus: proprietorStatusEnum("proprietor_status")
+    .default("NONE")
+    .notNull(),
+  kycSubmittedAt: timestamp("kyc_submitted_at"),
+  kycVerifiedAt: timestamp("kyc_verified_at"),
 
   created_at: timestamp("created_at").defaultNow().notNull(),
   deleted_at: timestamp("deleted_at"),

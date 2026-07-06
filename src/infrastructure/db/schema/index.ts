@@ -1,5 +1,6 @@
 export * from "./amenities.js";
 export * from "./discount.js";
+export * from "./kyc.js";
 export * from "./messages.js";
 export * from "./notification.js";
 export * from "./payments.js";
