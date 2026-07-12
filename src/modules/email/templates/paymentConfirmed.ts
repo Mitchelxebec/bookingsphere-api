@@ -46,7 +46,7 @@ export const paymentConfirmedTemplate = (data: PaymentConfirmedData): string => 
                   <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 6px; margin-bottom: 25px;">
                     <tr>
                       <td style="padding: 15px; text-align: center;">
-                        <span style="font-size: 12px; font-weight: 600; color: #64748b; uppercase; letter-spacing: 1px; display: block; margin-bottom: 4px;">RESERVATION REFERENCE ID</span>
+                        <span style="font-size: 12px; font-weight: 600; color: #64748b; uppercase; letter-spacing: 1px; display: block; margin-bottom: 4px;">RESERVATION REFERENCE ID:</span>
                         <strong style="font-size: 18px; color: #0f172a; font-family: monospace;">${data.reservationId}</strong>
                       </td>
                     </tr>
@@ -86,7 +86,7 @@ export const paymentConfirmedTemplate = (data: PaymentConfirmedData): string => 
                     </tr>
                     <tr style="border-top: 1px solid #f1f5f9;">
                       <td style="padding: 12px 0 6px 0; font-size: 16px; font-weight: 700; color: #0f172a;">Total Paid:</td>
-                      <td align="right" style="padding: 12px 0 6px 0; font-size: 20px; font-weight: 700; color: #16a34a;">${data.totalPrice}</td>
+                      <td align="right" style="padding: 12px 0 6px 0; font-size: 20px; font-weight: 700; color: #16a34a;">₦${data.totalPrice}</td>
                     </tr>
                   </table>
 

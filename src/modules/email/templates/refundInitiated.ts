@@ -39,8 +39,8 @@ export const refundInitiatedTemplate = (data: RefundInitiatedData): string => {
                   <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; margin-bottom: 25px;">
                     <tr>
                       <td style="padding: 20px; text-align: center;">
-                        <span style="font-size: 12px; font-weight: 600; color: #16a34a; uppercase; letter-spacing: 1px; display: block; margin-bottom: 4px;">TOTAL AMOUNT RETURNED</span>
-                        <strong style="font-size: 28px; color: #14532d;">${data.refundAmount}</strong>
+                        <span style="font-size: 12px; font-weight: 600; color: #16a34a; uppercase; letter-spacing: 1px; display: block; margin-bottom: 4px;">TOTAL AMOUNT RETURNED:</span>
+                        <strong style="font-size: 28px; color: #14532d;">₦${data.refundAmount}</strong>
                       </td>
                     </tr>
                   </table>

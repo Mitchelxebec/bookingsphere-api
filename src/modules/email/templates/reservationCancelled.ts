@@ -51,7 +51,7 @@ export const reservationCancelledTemplate = (data: ReservationCancelledData): st
                   <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 6px; margin-bottom: 25px;">
                     <tr>
                       <td style="padding: 15px; text-align: center;">
-                        <span style="font-size: 12px; font-weight: 600; color: #64748b; uppercase; letter-spacing: 1px; display: block; margin-bottom: 4px;">RESERVATION REFERENCE ID</span>
+                        <span style="font-size: 12px; font-weight: 600; color: #64748b; uppercase; letter-spacing: 1px; display: block; margin-bottom: 4px;">RESERVATION REFERENCE ID:</span>
                         <strong style="font-size: 18px; color: #0f172a; font-family: monospace;">${data.reservationId}</strong>
                       </td>
                     </tr>
@@ -81,7 +81,7 @@ export const reservationCancelledTemplate = (data: ReservationCancelledData): st
                     <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 15px;">
                       <p style="margin: 0 0 8px 0; font-size: 15px; font-weight: 700; color: #16a34a;">You are eligible for a refund</p>
                       <p style="margin: 0; font-size: 14px; color: #1e293b; line-height: 1.5;">
-                        A return payout of <strong>${data.refundAmount}</strong> has been authorized. You will receive a separate email transaction notice as soon as the funds are route-dispatched to your banking channel.
+                        A return payout of <strong>₦${data.refundAmount}</strong> has been authorized. You will receive a separate email transaction notice as soon as the funds are route-dispatched to your banking channel.
                       </p>
                     </div>
                   ` : `
