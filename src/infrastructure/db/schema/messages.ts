@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { boolean, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { reservations } from "./reservation.js";
 import { users } from "./users.js";
 
@@ -10,6 +10,10 @@ export const messages = pgTable("messages", {
   senderId: uuid("sender_id")
     .references(() => users.id, { onDelete: "restrict" })
     .notNull(),
+  receiverId: uuid("receiver_id")
+    .references(() => users.id, { onDelete: "restrict" })
+    .notNull(),
   message: text("message").notNull(),
+  isRead: boolean("is_read").default(false).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });

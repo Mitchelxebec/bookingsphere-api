@@ -14,6 +14,7 @@ import wishlistRoute from "./modules/wishlist/routes/wishlistRoutes.js";
 import paymentRoute from "./modules/payment/routes/paymentRoute.js";
 import paystackWebhookRoute from "./modules/payment/routes/webhookRoutes.js";
 import reviewRoute from "./modules/review/routes/reviewRoutes.js";
+import messageRoute from "./modules/messages/routes/messageRoute.js";
 
 // PROPRIETOR
 import proprietorPropertyRoute from "./modules/property/properties/router/proprietor/proprietorRouter.js";
@@ -25,6 +26,11 @@ import adminKycRoute from "./modules/kyc/routes/admin/adminKycRoute.js";
 import { errorHandler } from "./modules/shared/utils/errorMiddleware.js";
 import { TokenRotationRepository } from "./modules/auth/repository/repoTokenRotation.js";
 import { startExpiryJob } from "./infrastructure/jobs/expireReservation.js";
+
+import { createServer } from "http";
+import { Server } from "socket.io";
+import { socketAuth } from "./modules/socket/middleware/authSocket.js";
+import { registerSocketHandlers } from "./modules/socket/app.js";
 
 dotenv.config();
 
@@ -59,8 +65,10 @@ app.use("/api/v1/reservations", reservationRoute);
 app.use("/api/v1/wishlist", wishlistRoute);
 app.use("/api/v1/payments", paymentRoute);
 app.use("/api/v1/reviews", reviewRoute);
+app.use("/api/v1/reservations/:reservationId", messageRoute);
 
-app.get("/", (req: Request, res: Response) => {
+
+app.get("/health", (req: Request, res: Response) => {
   res.status(200).json({
     message: "BookingSphere API Gateway is online",
   });
@@ -68,8 +76,20 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use(errorHandler);
 
+const httpServer = createServer(app);
+
+const io = new Server(httpServer, {
+  cors: {
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  },
+});
+
+io.use(socketAuth)
+registerSocketHandlers(io)
+
 const PORT = process.env.PORT || 5005;
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
   console.log(`🚀 BookingSphere API running on port ${PORT}`);
 
   // Purge expired/used refresh tokens on startup, then every 24 hours
